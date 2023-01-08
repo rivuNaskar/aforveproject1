@@ -3,6 +3,7 @@ package com.rivu.springbootdemo.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
@@ -15,6 +16,7 @@ import com.rivu.springbootdemo.entity.GrantEntity;
 import com.rivu.springbootdemo.entity.PlanEntity;
 import com.rivu.springbootdemo.repository.AllocationRepository;
 import com.rivu.springbootdemo.repository.GrantRepository;
+import com.rivu.springbootdemo.repository.PlanEntityRepository;
 
 @Service
 public class AllocationService {
@@ -23,25 +25,35 @@ public class AllocationService {
 	private AllocationRepository allocationRepository;
 
 	@Autowired
-	private PlanService planService;
+	private GrantService grantService;
 
 	@Autowired
 	private GrantRepository grantRepository;
 	
-	
 	@Autowired
-	private GrantService grantService;
+	private PlanEntityRepository planEntityRepository;
+	
+	
+//	@Autowired
+//	private GrantService grantService;
 
 	public void prepareAndProcessAllocation() {
 
-		PlanEntity plan = getCurrentActivePlan();
-		List<GrantEntity> grantEntityList = getGrantAllocationByGrantId(plan.getId());
+		PlanEntity plan = getCurrentActivePlan(); //verified
+		System.out.println("Plan Object  :  "+plan);//verified
+		List<GrantEntity> grantEntityList = getGrantAllocationByGrantId(plan.getId()); //verified
+		System.out.println("List  : "+grantEntityList); //verified
 		List<AllocationEntity> allocationList = new ArrayList<>();
+		System.out.println("Allocation List  :  "+allocationList);
 		for(GrantEntity entity : grantEntityList) {
-			AllocationEntity allocationEntity = prepareAllocation(entity, allocationList);
+			prepareAllocation(entity, allocationList);
 			//grantService.getGrantStatusByGrantId(grant.getId());
-			allocationRepository.save(allocationEntity);
+			//allocationRepository.save(allocationEntity);
+			System.out.println("Entity  :  "+entity);
 		}
+		allocationRepository.saveAll(allocationList);
+		grantService.upDateAllocationStatus(grantEntityList);
+	
 		
 		}
 		
@@ -51,45 +63,49 @@ public class AllocationService {
 	
 
 	private List<GrantEntity> getGrantAllocationByGrantId(long id) {
-		return grantRepository.findByGrantStatusAndAllocationStatusAndPlanId("ACTIVE", "open", id);
+		System.out.println("Grant Id  :  "+id);
+		return grantRepository.findByGrantStatusAndAllocationStatusAndPlanId("APPROVED", "OPEN", id);
 	}
 
+
+	
 	public PlanEntity getCurrentActivePlan() {
-		return planService.getCurrentActivePlan(true);
+		System.out.println("Get Current Active Plan Executed !");
+		return planEntityRepository.findByIsCurrentPlan(true);
 	}
 
-//	public List<GrantEntity> getGrantAllocationByGrantId(long id) {
-//		GrantService grantService = new GrantService();
-//		return grantService.getGrantAllocationByPlanId(id);
-//
-//	}
 
-	public AllocationEntity prepareAllocation(GrantEntity grantEntity, List<AllocationEntity> allocationList) {
-		if (grantEntity.getGrantStatus().equalsIgnoreCase("ACTIVE")
-				&& grantEntity.getAllocationStatus().equalsIgnoreCase("open")) {
+
+	public void prepareAllocation(GrantEntity grantEntity, List<AllocationEntity> allocationList) {
+		if (grantEntity.getGrantStatus().equalsIgnoreCase("APPROVED")
+				&& grantEntity.getAllocationStatus().equalsIgnoreCase("PENDING")) {
 			{
+				for(int i=1;i<=5;i++) {
 				AllocationEntity allocation = new AllocationEntity();
 				allocation.setGrantId(grantEntity.getId());
 				
 				allocation.setActualAllocationDate(new Date());
 				allocation.setNumberOfAlloCation(grantEntity.getNumberOfGrants() / grantEntity.getFrequency());
-				allocation.setAllocationStatus("Active");
-				allocation.setGrantId(grantEntity.getId());
-				allocation.setAllocationYear("2023");
+				allocation.setAllocationStatus("PENDING");
+				//allocation.setGrantId(grantEntity.getPlanId());
+				
+				allocation.setAllocationYear(2023+i);
 				allocation.setPlanedAllocationDate(new Date());
 				allocationList.add(allocation);
 				System.out.println(allocation);
-				return allocation;
+				//return allocation;
+			}
 			}
 		}
-		allocationRepository.saveAll(allocationList);
-		return null;
+		
+		//allocationRepository.saveAll(allocationList);
+		//return null;
 
 	}
 	
 	
-	//@Scheduled(fixedDelay = 1000000)
-	@PostConstruct
+	//@Scheduled(fixedDelay = 1000)
+	//@PostConstruct
 	public void initAllocation() {
 		new Thread(new Runnable() {
 
@@ -101,6 +117,27 @@ public class AllocationService {
 			
 		}).start();
 	}
+	
+  
+	public void approveAllocation(List<Long> allocationIdList) {
+		List<AllocationEntity>  allocationEntityList=new ArrayList<>();
+		allocationIdList.stream().forEach(allocationId->{
+			Optional<AllocationEntity> optional=allocationRepository.findById(allocationId);
+			AllocationEntity allocationEntity=optional.get();
+			allocationEntity.setAllocationStatus("APPROVED");
+			allocationEntity.setActualAllocationDate(new Date());
+			allocationEntityList.add(allocationEntity);
+			
+		});
+		allocationRepository.saveAll(allocationEntityList);
+	}
+	
+	
+	public List<AllocationEntity> findByGrantId(long grantId) {
+		return allocationRepository.findBygrantId(grantId);
+	}
+	
+	
 	
 	
 

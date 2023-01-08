@@ -34,7 +34,7 @@ public class GrantEntity implements Serializable {
 	private long numberOfGrants;
 	
 	@Column(name="band")
-	private String  band;
+	private long  band;
 	
 	@Column(name="grant_price")
 	private double grantPrice;
@@ -62,5 +62,6 @@ public class GrantEntity implements Serializable {
 	
 	@Column(name="allocation_status")
 	private String allocationStatus;
-
+	
+	
 }

@@ -14,7 +14,7 @@ public class GrantDto implements Serializable {
 	
 	private long noOfGrants;
 	
-	private String band;
+	private long band;
 	
 	private double grantPrice;
 	

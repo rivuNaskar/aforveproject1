@@ -15,11 +15,13 @@ import com.rivu.springbootdemo.constant.AppConstant;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @RequiredArgsConstructor
 @Entity
 @Data
 @Table(name = AppConstant.PLAN_ENTITY)
+@ToString
 public class PlanEntity implements Serializable {
 
 	@Id
@@ -39,5 +41,11 @@ public class PlanEntity implements Serializable {
 
 	@Column(name = "is_current_plan")
 	private boolean isCurrentPlan;
+	
+	@Column(name="vesting_factor")
+	private double vestingFactor;
+	
+	@Column(name="vested_date")
+	private Date vestedDate;
 
 }

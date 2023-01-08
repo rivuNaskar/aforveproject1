@@ -40,7 +40,7 @@ public class AllocationEntity implements Serializable {
 	private  Date actualAllocationDate;
 	
 	@Column(name="allocation_year")
-	private String allocationYear;
+	private long allocationYear;
 	
 	@Column(name="allocation_status")
 	private String allocationStatus;

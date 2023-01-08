@@ -8,5 +8,6 @@ import com.rivu.springbootdemo.entity.PlanEntity;
 
 public interface PlanEntityRepository extends JpaRepository<PlanEntity, Long> {
 	PlanEntity findByIsCurrentPlan(boolean isCurrentPlan);
+	
 
 }

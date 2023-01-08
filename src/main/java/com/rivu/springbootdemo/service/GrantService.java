@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import org.aspectj.weaver.NewConstructorTypeMunger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,21 +63,34 @@ public class GrantService {
 		return grantRepository.findById(id);
 	}
 
-	public void upDateGrantStatus(List<Long> grantIdList) {
-		List<GrantEntity> grantEntityList = new ArrayList<>();
+	public void upDateAllocationStatus(List<GrantEntity> grantEntityList) {
+		//List<GrantEntity> grantEntityList = new ArrayList<>();
 
-		grantIdList.stream().forEach(grantId -> {
-			Optional<GrantEntity> optional = grantRepository.findById(grantId);
-			GrantEntity grantEntity = optional.get();
-			grantEntity.setGrantStatus("ACTIVE");
-			grantEntityList.add(grantEntity);
+		grantEntityList.stream().forEach(grantEntity -> {
+			//Optional<GrantEntity> optional = grantRepository.findById(grantId);
+			//GrantEntity grantEntity = optional.get();
+			//grantEntity.setGrantStatus("ACTIVE");
+			grantEntity.setAllocationStatus("ALLOCATED");
+			grantRepository.save(grantEntity);
+			//grantEntityList.add(grantEntity);
 		});
 		grantRepository.saveAll(grantEntityList);
 
 	}
 	
-//	public List<GrantEntity> getGrantAllocationByPlanId(long id) {
-//		return  grantRepository.findByPlanId(id);
-//	}
+	public void updateGrantStatusBasedOnId(List<Long> grantIdList) {
+		List<GrantEntity> grantEntityList=new ArrayList<>();
+		
+		grantIdList.stream().forEach(grantId->{
+		Optional<GrantEntity> optional=grantRepository.findById(grantId);
+		GrantEntity grantEntity=optional.get();
+		grantEntity.setGrantStatus("Activated");
+		grantEntityList.add(grantEntity);
+		
+		
+		});
+		grantRepository.saveAll(grantEntityList);
+	}
 
+	
 }

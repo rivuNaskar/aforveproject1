@@ -8,6 +8,7 @@ import com.rivu.springbootdemo.entity.AllocationEntity;
 import com.rivu.springbootdemo.entity.GrantEntity;
 
 public interface AllocationRepository extends JpaRepository<AllocationEntity, Long> {
+	List<AllocationEntity> findBygrantId(long  grantId);
 
 
 	

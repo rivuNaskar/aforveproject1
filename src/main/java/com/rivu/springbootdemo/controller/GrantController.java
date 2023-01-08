@@ -40,18 +40,13 @@ public class GrantController {
 		return grantService.getGrantStatusByGrantId(id);
 
 	}
-
+	
 	@PutMapping(value=AppConstant.UPDATE_GRANT_STATUS)
-	public void upDateGrantStatus(@RequestBody List<Long> grantIdList) {
-		 grantService.upDateGrantStatus(grantIdList);
-
+	public void upDateGrantStatus( @RequestBody List<Long> grantId) {
+		grantService.updateGrantStatusBasedOnId(grantId);
 	}
+
 	
-//	@GetMapping(value=AppConstant.GRANT_ALLOCATION_BY_PLAN_ID)
-//	public List<GrantEntity> getGrantAllocationByPlanId(@RequestHeader(name="id")  long id){
-//		return grantService.getGrantAllocationByPlanId(id);
-//		
-//	}
-	
+
 
 }
