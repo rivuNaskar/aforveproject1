@@ -19,6 +19,7 @@ import com.rivu.springbootdemo.constant.AppConstant;
 import com.rivu.springbootdemo.dto.GrantDto;
 import com.rivu.springbootdemo.entity.GrantEntity;
 import com.rivu.springbootdemo.service.GrantService;
+import com.rivu.springbootdemo.service.MySqlTemplate;
 import com.rivu.springbootdemo.service.PlanService;
 
 @RestController
@@ -27,6 +28,8 @@ public class GrantController {
 
 	@Autowired
 	private GrantService grantService;
+	@Autowired
+	private MySqlTemplate mySql;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GrantController.class);
 
@@ -40,12 +43,16 @@ public class GrantController {
 		return grantService.getGrantStatusByGrantId(id);
 
 	}
-	
-	@PutMapping(value=AppConstant.UPDATE_GRANT_STATUS)
-	public void upDateGrantStatus( @RequestBody List<Long> grantId) {
+
+	@PutMapping(value = AppConstant.UPDATE_GRANT_STATUS)
+	public void upDateGrantStatus(@RequestBody List<Long> grantId) {
 		grantService.updateGrantStatusBasedOnId(grantId);
 	}
 
+	@PutMapping(value = AppConstant.UPDATE_ALLOCATION)
+	public  @ResponseBody  List<GrantEntity>  upDateStatus() {
+		return grantService.upDateAllocationStatus();
+	}
 	
 
 

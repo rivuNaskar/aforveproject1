@@ -23,7 +23,7 @@ public class GrantService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GrantService.class);
 
 	/**
-	 * This is the method of save grant Details ehich takes List of granr dto as a
+	 * This is the method of save grant Details which takes List of grant dto as a
 	 * input and save the entitylist;
 	 * 
 	 * @param grantDtoList
@@ -40,11 +40,12 @@ public class GrantService {
 			grantEntity.setGrantPrice(grantDto.getGrantPrice());
 			grantEntity.setLogInStatus(grantDto.getLogInStatus());
 			grantEntity.setNumberOfGrants(grantDto.getNoOfGrants());
-			grantEntity.setVestingTenure(grantDto.getNoOfGrants());
+			grantEntity.setVestingTenure(grantDto.getVestingTenure());
 			grantEntity.setAcceptedDate(new Date());
 			grantEntity.setAllocationStatus("OPEN");
 			grantEntity.setGrantStatus("None");
 			grantEntity.setAccepted(false);
+			grantEntity.setPlanId(grantDto.getPlanId());
 
 			grantEntityList.add(grantEntity);
 
@@ -60,37 +61,41 @@ public class GrantService {
 	 * @param id
 	 */
 	public Optional<GrantEntity> getGrantStatusByGrantId(long id) {
+		LOGGER.info("Inside the getGrantStatusByGrantId{} in grantService" + id);
 		return grantRepository.findById(id);
 	}
 
-	public void upDateAllocationStatus(List<GrantEntity> grantEntityList) {
-		//List<GrantEntity> grantEntityList = new ArrayList<>();
+	public List<GrantEntity> upDateAllocationStatus() {
+		LOGGER.info("Inside the upDateAllocationStatus{} in grantService ");
+		List<GrantEntity> grantEntityList = new ArrayList<>();
 
 		grantEntityList.stream().forEach(grantEntity -> {
-			//Optional<GrantEntity> optional = grantRepository.findById(grantId);
-			//GrantEntity grantEntity = optional.get();
-			//grantEntity.setGrantStatus("ACTIVE");
+
 			grantEntity.setAllocationStatus("ALLOCATED");
-			grantRepository.save(grantEntity);
-			//grantEntityList.add(grantEntity);
+
+			grantEntityList.add(grantEntity);
 		});
-		grantRepository.saveAll(grantEntityList);
+		return grantRepository.saveAll(grantEntityList);
 
 	}
-	
+
+	/**
+	 * This method will update GrantStatus based on List of GrantId
+	 * 
+	 * @param grantIdList
+	 */
 	public void updateGrantStatusBasedOnId(List<Long> grantIdList) {
-		List<GrantEntity> grantEntityList=new ArrayList<>();
-		
-		grantIdList.stream().forEach(grantId->{
-		Optional<GrantEntity> optional=grantRepository.findById(grantId);
-		GrantEntity grantEntity=optional.get();
-		grantEntity.setGrantStatus("Activated");
-		grantEntityList.add(grantEntity);
-		
-		
+		LOGGER.info("Inside the updateStatusBasedOnId{} in grantService ");
+		List<GrantEntity> grantEntityList = new ArrayList<>();
+
+		grantIdList.stream().forEach(grantId -> {
+			Optional<GrantEntity> optional = grantRepository.findById(grantId);
+			GrantEntity grantEntity = optional.get();
+			grantEntity.setGrantStatus("Activated");
+			grantEntityList.add(grantEntity);
+
 		});
 		grantRepository.saveAll(grantEntityList);
 	}
 
-	
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rivu.springbootdemo.constant.AppConstant;
 import com.rivu.springbootdemo.dto.ExerciseDto;
 import com.rivu.springbootdemo.entity.AllocationEntity;
+import com.rivu.springbootdemo.entity.GrantEntity;
 import com.rivu.springbootdemo.service.AllocationService;
 import com.rivu.springbootdemo.service.MySqlTemplate;
 @RestController
@@ -38,6 +39,7 @@ public class AllocationController {
 		return mySql.getTotalAllocation();
 		
 	}
+	
 	
 	
 

@@ -31,6 +31,7 @@ public interface AppConstant {
 	// Api for Allocation Entity
 
 	public static String APPROVE_ALLOCATION = "/approveAllocation";
+	public static String UPDATE_ALLOCATION="/updateAllocationGrant";
 	
 	//Api for vesting factor
 	public static String VESTING_FACTOR="/upDateVestingFactor";

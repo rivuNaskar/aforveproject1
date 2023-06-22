@@ -26,6 +26,7 @@ public class ExerciseService {
 
 	@Autowired
 	private PlanService planService;
+	
 
 	public void approveExercise() {
 
